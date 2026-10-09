@@ -33,6 +33,8 @@ source path, built with `getImageProps` from `next/image`. Used by the preloader
 slider textures and (via matching `sizes`) the `<Image>` components, so a preloaded
 request is a browser-cache hit for the real consumer. `images.deviceSizes` in `next.config.ts` is capped at 1920 (drops 2048/3840) so every `<Image>`, preload and WebGL texture resolves to the same ≤1920 URL. The helper takes `{ src, sizes }` and returns `{ srcSet, sizes }`; consumers set both on an `Image()`/`<img>` and the browser picks the candidate.
 
+**Amendment 2026-10-09:** `images.unoptimized` is now `true` (the exact original files are served and preloaded, ~465 MB total), so the `deviceSizes` cap and srcset candidates no longer apply; the helper returns `{ src, srcSet?, sizes }`.
+
 ### 2. Preloader — `components/Preloader.tsx` (client) + manifest
 
 - Root layout (server) builds a manifest

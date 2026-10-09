@@ -9,7 +9,7 @@ Mỗi nội dung (mục trong danh sách bên trái) có một thư mục ảnh.
 - **Ảnh `01` là ảnh nằm trong frame Figma của nội dung đó** và là ảnh hiện đầu tiên. Cắt ảnh (crop) theo thiết kế chỉ áp dụng cho ảnh này.
 - Có nhiều ảnh thì tự chuyển bằng hiệu ứng morph (WebGL) lần lượt, mỗi ảnh 4 giây. Chỉ có 1 ảnh thì đứng yên. Thư mục trống thì khung ảnh để trống.
 - Tất cả ảnh được tải sẵn khi vào web (ảnh của trang đang xem trước, màn hình loading chỉ hiện ở lần tải đầu của phiên). Không cần khai báo thêm; ảnh nào bỏ vào thư mục cũng được tải.
-- Định dạng nhận: `.jpg` `.jpeg` `.png` `.webp` `.avif`. Chiều rộng nên không quá khoảng 2560px (ảnh gốc 4096px nặng 8–12 MB, không cần thiết).
+- Định dạng nhận: `.jpg` `.jpeg` `.png` `.webp` `.avif`. Ảnh được hiển thị và tải về đúng chất lượng gốc, không nén lại, nên hãy nén/giảm kích thước ảnh trước khi thêm vào (ảnh 4096px nặng 8–12 MB sẽ làm trang tải chậm).
 - Khi chạy `npm run dev`, thêm file xong tải lại trang là thấy. Bản production cần build lại.
 - Không dùng thư mục này cho ảnh Trang chủ và About: các ảnh đó có tên cố định (xem cuối trang).
 
