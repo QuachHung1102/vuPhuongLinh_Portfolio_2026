@@ -31,8 +31,7 @@ navigation.
 One function that returns the optimized URL (`/_next/image?url=…&w=…&q=75`) for a
 source path, built with `getImageProps` from `next/image`. Used by the preloader, the
 slider textures and (via matching `sizes`) the `<Image>` components, so a preloaded
-request is a browser-cache hit for the real consumer. Width is capped at 1920
-(`images.deviceSizes` entry) so WebGL textures stay GPU-safe.
+request is a browser-cache hit for the real consumer. `images.deviceSizes` in `next.config.ts` is capped at 1920 (drops 2048/3840) so every `<Image>`, preload and WebGL texture resolves to the same ≤1920 URL. The helper takes `{ src, sizes }` and returns `{ srcSet, sizes }`; consumers set both on an `Image()`/`<img>` and the browser picks the candidate.
 
 ### 2. Preloader — `components/Preloader.tsx` (client) + manifest
 
@@ -43,8 +42,10 @@ request is a browser-cache hit for the real consumer. Width is capped at 1920
   image of each item on the landing route.
 - Tier 1 (`critical`): `new Image()` with high fetch priority, `decode()`; resolves a
   "ready" promise when all settle (errors count as settled — never block the site).
+  Tier 1 waits at most 15 s, then the screen leaves anyway.
 - Tier 2 (`rest`): starts after tier 1 settles, `requestIdleCallback` (fallback
   `setTimeout`), concurrency 3, same helper URLs.
+  Order: the landing route's remaining images first, then the other routes in navigation order. `public/images/home/about-me.png` is unused and excluded.
 - Runs on every full load (cheap on warm HTTP cache); only the **screen** is first-load-only.
 
 ### 3. Loading screen — `components/LoadingScreen.tsx` + CSS
@@ -60,7 +61,7 @@ request is a browser-cache hit for the real consumer. Width is capped at 1920
 
 ### 4. Page transition
 
-Wrap `children` in `app/layout.tsx` with React `<ViewTransition>` (React 19.3, works in
+Wrap the returned root element of each page (`app/page.tsx`, `app/about/page.tsx`, `components/SectionView.tsx`) in React `<ViewTransition>` — layouts persist, so enter/exit never fire there (React 19.3, works in
 the App Router without config — `node_modules/next/dist/docs/01-app/02-guides/view-transitions.md`).
 CSS: `::view-transition-old(root)` / `::view-transition-new(root)` cross-fade, 1000 ms
 (same as the old slideshow `FADE_MS`; tune in one CSS variable). Browsers without
@@ -82,7 +83,7 @@ support navigate normally.
 - `components/Slideshow.tsx` keeps its props `{ images, alt, focus }`. The first image
   still renders as `<Image preload>` under the canvas (SSR/LCP, no-WebGL fallback,
   hidden once the first texture is ready). `SectionView` is unchanged.
-- Dependencies: add `ogl`, `gsap`; remove `swiper` and its CSS imports.
+- Add `ogl`; remove `swiper` and its CSS imports. No `gsap`: one tween, done with `requestAnimationFrame`. The canvas renders on demand (during a transition and on resize), not every frame. The React Bits vignette is dropped (photos must not darken); the melt threshold is remapped so progress 0 and 1 are exactly the current and next image.
 
 ## Error handling
 
