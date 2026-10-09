@@ -7,7 +7,8 @@ Mỗi nội dung (mục trong danh sách bên trái) có một thư mục ảnh.
 - Đường dẫn: `public/images/<mục>/<số>-<tên>/`.
 - Ảnh được sắp **theo tên file** (01, 02, 10 sắp đúng thứ tự số). Nên đặt tên `01.jpg`, `02.jpg`, `03.jpg`...
 - **Ảnh `01` là ảnh nằm trong frame Figma của nội dung đó** và là ảnh hiện đầu tiên. Cắt ảnh (crop) theo thiết kế chỉ áp dụng cho ảnh này.
-- Có nhiều ảnh thì tự chuyển mờ lần lượt (autofade), mỗi ảnh 4 giây. Chỉ có 1 ảnh thì đứng yên. Thư mục trống thì khung ảnh để trống.
+- Có nhiều ảnh thì tự chuyển bằng hiệu ứng morph (WebGL) lần lượt, mỗi ảnh 4 giây. Chỉ có 1 ảnh thì đứng yên. Thư mục trống thì khung ảnh để trống.
+- Tất cả ảnh được tải sẵn khi vào web (ảnh của trang đang xem trước, màn hình loading chỉ hiện ở lần tải đầu của phiên). Không cần khai báo thêm; ảnh nào bỏ vào thư mục cũng được tải.
 - Định dạng nhận: `.jpg` `.jpeg` `.png` `.webp` `.avif`. Chiều rộng nên không quá khoảng 2560px (ảnh gốc 4096px nặng 8–12 MB, không cần thiết).
 - Khi chạy `npm run dev`, thêm file xong tải lại trang là thấy. Bản production cần build lại.
 - Không dùng thư mục này cho ảnh Trang chủ và About: các ảnh đó có tên cố định (xem cuối trang).
