@@ -1,5 +1,8 @@
 import type { Metadata } from "next";
 import localFont from "next/font/local";
+import { Preloader } from "@/components/Preloader";
+import { SEEN_SCRIPT } from "@/lib/first-load";
+import { getManifest } from "@/lib/site-manifest";
 import "./globals.css";
 
 const goudy = localFont({
@@ -16,8 +19,15 @@ export const metadata: Metadata = {
 
 export default function RootLayout({ children }: LayoutProps<"/">) {
   return (
-    <html lang="en" className={goudy.variable}>
-      <body>{children}</body>
+    // Extensions (Immersive Translate, ColorZilla) inject attrs on <html>/<body> before hydration.
+    <html lang="en" className={goudy.variable} suppressHydrationWarning>
+      <head>
+        <script dangerouslySetInnerHTML={{ __html: SEEN_SCRIPT }} />
+      </head>
+      <body suppressHydrationWarning>
+        {children}
+        <Preloader manifest={getManifest()} />
+      </body>
     </html>
   );
 }

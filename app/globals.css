@@ -36,3 +36,44 @@ body {
   color: #fff;
   font-family: var(--font-sans);
 }
+
+/* First-load screen: "vu phuong linh" spinning around a circle. */
+#loading-screen {
+  transition: opacity 600ms ease;
+}
+#loading-screen[data-leaving] {
+  opacity: 0;
+  pointer-events: none;
+}
+html[data-seen] #loading-screen {
+  display: none;
+}
+.loader-ring {
+  --r: clamp(70px, 13vmin, 150px);
+  position: relative;
+  width: calc(var(--r) * 2);
+  height: calc(var(--r) * 2);
+  font-size: calc(var(--r) * 0.3);
+  animation: loader-spin 12s linear infinite;
+}
+.loader-ring span {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  white-space: pre;
+  transform: translate(-50%, -50%) rotate(calc(360deg / var(--n) * var(--i)))
+    translateY(calc(var(--r) * -1));
+}
+@keyframes loader-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .loader-ring {
+    animation: none;
+  }
+  #loading-screen {
+    transition: none;
+  }
+}
