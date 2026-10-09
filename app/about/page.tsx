@@ -32,6 +32,7 @@ export default function About() {
             fill
             sizes={ABOUT_HERO_SIZES}
             preload
+            loading="eager"
             className="object-cover"
           />
           <div

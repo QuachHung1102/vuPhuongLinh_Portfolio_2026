@@ -7,8 +7,8 @@ const nextConfig: NextConfig = {
   },
   cacheComponents: true,
   images: {
-    // 1920 max: keeps WebGL textures GPU-safe and makes every consumer resolve to one URL.
-    deviceSizes: [640, 750, 828, 1080, 1200, 1920],
+    // Originals are served as-is on purpose: exact original quality (~465 MB total).
+    unoptimized: true,
   },
   partialPrefetching: true,
   turbopack: {

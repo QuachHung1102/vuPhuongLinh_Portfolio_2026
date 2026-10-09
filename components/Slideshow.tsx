@@ -18,6 +18,7 @@ export function Slideshow({ images, alt, focus }: Props) {
         fill
         sizes={SLIDE_SIZES}
         preload
+        loading="eager"
         className="object-cover"
         style={focus ? { objectPosition: focus } : undefined}
       />

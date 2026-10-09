@@ -3,7 +3,7 @@
 import { useEffect, useRef } from "react";
 import { Mesh, Program, Renderer, Texture, Triangle } from "ogl";
 import { parseFocus } from "@/lib/focus";
-import { imageSet } from "@/lib/image-set";
+import { imageSet, setImageSource } from "@/lib/image-set";
 
 // Trimmed port of React Bits "Morph Slider" (melt, intensity 0, aberration 0, scale 1).
 // Differences: renders on demand (no continuous loop), no vignette, per-image focus,
@@ -144,8 +144,28 @@ export function MorphSlider({ images, sizes, focus, delayMs = 4000, durationMs =
       const [x, y] = parseFocus(i === 0 ? focus : undefined);
       return [x, 1 - y];
     });
+    // Originals are up to 4096px (~45 MB as an RGBA texture), so images stay as decoded
+    // elements and a GPU texture exists only for the current and the next slide.
+    const loaded: (HTMLImageElement | undefined)[] = [];
     const textures: (Texture | undefined)[] = [];
     const dims: [number, number][] = [];
+    // Mipmaps stop the 4096px source aliasing when it is minified into the canvas (WebGL2 only: NPOT-safe).
+    const mips = renderer.isWebgl2;
+    const textureFor = (i: number) => {
+      const image = loaded[i];
+      if (!image) return undefined;
+      return (textures[i] ??= new Texture(gl, {
+        image,
+        generateMipmaps: mips,
+        minFilter: mips ? gl.LINEAR_MIPMAP_LINEAR : gl.LINEAR,
+      }));
+    };
+    const freeExcept = (keep: number) => {
+      textures.forEach((t, i) => {
+        if (t && i !== keep) gl.deleteTexture(t.texture);
+        if (i !== keep) delete textures[i];
+      });
+    };
     let current = 0;
     let disposed = false;
     let timer = 0;
@@ -156,7 +176,10 @@ export function MorphSlider({ images, sizes, focus, delayMs = 4000, durationMs =
     });
 
     const showCurrent = () => {
-      u.tCurrent.value = textures[current];
+      const t = textureFor(current);
+      u.tCurrent.value = t;
+      u.tNext.value = t; // never leave a freed texture bound
+      freeExcept(current);
       u.uCurrentSize.value = dims[current];
       u.uCurrentFocus.value = foci[current];
       u.uProgress.value = 0;
@@ -166,15 +189,13 @@ export function MorphSlider({ images, sizes, focus, delayMs = 4000, durationMs =
 
     images.forEach((src, i) => {
       const img = new Image();
-      const set = imageSet({ src, sizes });
       img.onload = () => {
         if (disposed) return;
-        textures[i] = new Texture(gl, { image: img, generateMipmaps: false });
+        loaded[i] = img;
         dims[i] = [img.naturalWidth, img.naturalHeight];
         if (i === current) showCurrent();
       };
-      img.sizes = set.sizes;
-      img.srcset = set.srcSet;
+      setImageSource(img, imageSet({ src, sizes }));
     });
 
     const schedule = () => {
@@ -183,8 +204,8 @@ export function MorphSlider({ images, sizes, focus, delayMs = 4000, durationMs =
     const advance = () => {
       const next = (current + 1) % images.length;
       // Hidden tab or texture not ready yet: skip this beat instead of queueing transitions.
-      if (document.hidden || !textures[current] || !textures[next]) return schedule();
-      u.tNext.value = textures[next];
+      if (document.hidden || !loaded[current] || !loaded[next]) return schedule();
+      u.tNext.value = textureFor(next);
       u.uNextSize.value = dims[next];
       u.uNextFocus.value = foci[next];
       u.uSeed.value = Math.random() * 100;
@@ -212,6 +233,7 @@ export function MorphSlider({ images, sizes, focus, delayMs = 4000, durationMs =
       cancelAnimationFrame(raf);
       ro.disconnect();
       canvas.remove();
+      freeExcept(-1);
       gl.getExtension("WEBGL_lose_context")?.loseContext();
     };
   }, [images, sizes, focus, delayMs, durationMs]);

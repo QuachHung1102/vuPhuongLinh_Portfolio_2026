@@ -2,7 +2,7 @@
 
 import { useEffect, useState } from "react";
 import { SEEN_KEY } from "@/lib/first-load";
-import { imageSet } from "@/lib/image-set";
+import { imageSet, setImageSource } from "@/lib/image-set";
 import { planFor, type ImageRef, type Manifest } from "@/lib/manifest";
 import { runPool } from "@/lib/preload-queue";
 import { LoadingScreen } from "./LoadingScreen";
@@ -14,12 +14,10 @@ const LEAVE_MS = 600; // keep in sync with the opacity transition in globals.css
 /** Resolves when the image loaded or failed; never rejects. */
 function load(ref: ImageRef, priority: "high" | "low"): Promise<void> {
   return new Promise((resolve) => {
-    const { srcSet, sizes } = imageSet(ref);
     const img = new Image();
     img.fetchPriority = priority;
     img.onload = img.onerror = () => resolve();
-    img.sizes = sizes; // before srcset so the right candidate is picked
-    img.srcset = srcSet;
+    setImageSource(img, imageSet(ref));
   });
 }
 
