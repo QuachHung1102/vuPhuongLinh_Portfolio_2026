@@ -20,7 +20,7 @@ Cột "Layer trong Figma" là tên layer ảnh nằm bên phải thiết kế, �
 | Thư mục | Nội dung | Hiện có | Layer trong Figma |
 | ------- | -------- | ------- | ----------------- |
 | `competition/1-wico` | Gold Award - WICO 2026 | 5 | `IMG_1410` (ảnh `01`), `IMG_1220`, `z8055…`, `IMG_1450`, `IMG_1422`, `IMG_1453`, `IMG_1474` |
-| `competition/2-ican` | iCAN 2026 | 1 | `image 3`: chỉ một ảnh, không autofade |
+| `competition/2-ican` | iCAN 2026 | 1 | `image 3`: chỉ một ảnh, không chuyển ảnh |
 | `competition/3-hssic` | High School Social Impact Challenge | 6 | `DSC_3264`, `DSC_3316`, `DSC_3104`, `DSC_3137`, `DSC_3226`, `DSC_3218`, `DSC_3343`, `DSC_3431` |
 | `competition/4-rmit` | RMIT Tech Camp | 3 | `55368061898_…`, `55367909406_…`, `55367918486_…`, `807193d3-…`, `b519e29b-…` |
 | `competition/5-buildhub` | Build@HUB Hackathon | 2 | `IMG_0652`, `IMG_0444`, `IMG_0815`, `IMG_0843`, `2. Competition` |
@@ -29,11 +29,11 @@ Cột "Layer trong Figma" là tên layer ảnh nằm bên phải thiết kế, �
 | `performing/3-cai-luong` | Hanoi Cai Luong Theater | 1 | `1905plv-6534`, `1905plv-6554`, `1905plv-6580` |
 | `performing/4-little-sun` | Little Sun Theater Troupe | 1 | `DSC05107`, `DSC05125`, `DSC05136`, `DSC05168` |
 | `culture-writing/1-gom-show` | GOm Show | 3 | `image 4`, `image 5` (và ảnh trong frame) |
-| `culture-writing/2-cnn-zoom` | CNN ZOOM | 1 | `image 7`: chỉ một ảnh, không autofade |
+| `culture-writing/2-cnn-zoom` | CNN ZOOM | 1 | `image 7`: chỉ một ảnh, không chuyển ảnh |
 | `culture-writing/3-life-so-drama` | Life’s So Drama | 6 | `IMG_7059` … `IMG_7064` |
 | `community-services/1-up-project` | The Up Project | 5 | `486801181_…`, `IMG_0109`, `IMG_6993`, `IMG_7360`, `kéo co` |
 | `community-services/2-scribbles` | Scribbles Season 11 | 6 | `scb 3`, `scb 4`, `scb 5`, `IMG_7806`, `Rectangle 11` |
-| `community-services/3-nha-em` | Nha Em Bakery | 1 | một ảnh (poster), không autofade |
+| `community-services/3-nha-em` | Nha Em Bakery | 1 | một ảnh (poster), không chuyển ảnh |
 | `community-services/4-school-prom` | School Prom Event | 5 | trong Figma chỉ có các khung trống `Rectangle 6`–`10`, chưa có ảnh |
 
 Tên layer lấy từ panel Layers của Figma. Các hàng ảnh nằm bên phải frame, ngang hàng với frame tương ứng.

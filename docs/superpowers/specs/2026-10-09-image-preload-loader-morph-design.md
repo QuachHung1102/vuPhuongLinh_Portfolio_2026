@@ -35,11 +35,13 @@ request is a browser-cache hit for the real consumer. `images.deviceSizes` in `n
 
 ### 2. Preloader — `components/Preloader.tsx` (client) + manifest
 
-- Root layout (server) builds a manifest: `{ critical: string[], rest: string[] }`
-  from `lib/content.ts` (`listImages`), the home columns and `about`. Order of `rest`:
-  about → competition → performing → culture-writing → community-services, items in
-  file order. `critical` = the 5 home images when landing on `/`; otherwise the first
-  image of each item on the landing route.
+- Root layout (server) builds a manifest
+  `{ routes: { [route]: { critical: ImageRef[]; all: ImageRef[] } }; order: string[] }`
+  (`ImageRef = { src, sizes }`) from `lib/content.ts` (`listImages`), the home columns
+  and `about`. The client `planFor(manifest, pathname)` picks the landing route's
+  `critical` (the 5 home images on `/`; the about hero on `/about`; the first image of
+  each item on a section) and builds `rest` = the landing route's remaining images
+  first, then the other routes in navigation order, deduplicated by `src|sizes`.
 - Tier 1 (`critical`): `new Image()` with high fetch priority, `decode()`; resolves a
   "ready" promise when all settle (errors count as settled — never block the site).
   Tier 1 waits at most 15 s, then the screen leaves anyway.
