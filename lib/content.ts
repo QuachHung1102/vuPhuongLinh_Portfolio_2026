@@ -228,10 +228,13 @@ const sections: SectionDef[] = [
   },
 ];
 
+/** Slugs in site navigation order (competition → community-services). */
+export const sectionSlugs = sections.map((s) => s.slug);
+
 const IMAGE_FILE = /\.(jpe?g|png|webp|avif)$/i;
 
 // Đọc lúc render, nên thả ảnh vào thư mục là hiện luôn, không cần sửa code.
-function listImages(dir: string): string[] {
+export function listImages(dir: string): string[] {
   const abs = path.join(process.cwd(), "public", "images", dir);
   if (!fs.existsSync(abs)) return [];
   return fs

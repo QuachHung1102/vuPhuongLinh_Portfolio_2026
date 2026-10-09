@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { u } from "@/lib/design";
+import { ABOUT_GALLERY_SIZES, ABOUT_HERO_SIZES } from "@/lib/image-sizes";
 
 // Lưới ảnh dưới hero: tên file + vị trí/kích thước theo design px.
 const grid = [
@@ -27,7 +28,7 @@ export default function About() {
           src="/images/about/hero.jpg"
           alt="Phuong Linh"
           fill
-          sizes="100vw"
+          sizes={ABOUT_HERO_SIZES}
           preload
           className="object-cover"
         />
@@ -72,7 +73,7 @@ export default function About() {
           className="absolute"
           style={{ left: u(g.x), top: u(g.y), width: u(g.w), height: u(g.h) }}
         >
-          <Image src={`/images/about/${g.src}`} alt="" fill sizes="35vw" className="object-cover" />
+          <Image src={`/images/about/${g.src}`} alt="" fill sizes={ABOUT_GALLERY_SIZES} className="object-cover" />
         </div>
       ))}
 
