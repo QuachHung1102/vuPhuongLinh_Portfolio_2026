@@ -40,6 +40,14 @@ body {
 /* First-load screen: "vu phuong linh" spinning around a circle. */
 #loading-screen {
   transition: opacity 600ms ease;
+  /* CSS-only escape if JS never removes the screen (JS path leaves by ~15.6 s). */
+  animation: loader-bail 0s 20s forwards;
+}
+@keyframes loader-bail {
+  to {
+    visibility: hidden;
+    pointer-events: none;
+  }
 }
 #loading-screen[data-leaving] {
   opacity: 0;

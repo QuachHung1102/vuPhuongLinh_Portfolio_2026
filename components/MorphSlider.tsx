@@ -150,6 +150,10 @@ export function MorphSlider({ images, sizes, focus, delayMs = 4000, durationMs =
     let disposed = false;
     let timer = 0;
     let raf = 0;
+    canvas.addEventListener("webglcontextlost", () => {
+      canvas.style.opacity = "0";
+      clearTimeout(timer);
+    });
 
     const showCurrent = () => {
       u.tCurrent.value = textures[current];

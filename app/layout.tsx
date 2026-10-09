@@ -23,6 +23,9 @@ export default function RootLayout({ children }: LayoutProps<"/">) {
     <html lang="en" className={goudy.variable} suppressHydrationWarning>
       <head>
         <script dangerouslySetInnerHTML={{ __html: SEEN_SCRIPT }} />
+        <noscript>
+          <style>{"#loading-screen{display:none}"}</style>
+        </noscript>
       </head>
       <body suppressHydrationWarning>
         {children}
