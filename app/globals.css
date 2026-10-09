@@ -77,3 +77,23 @@ html[data-seen] #loading-screen {
     transition: none;
   }
 }
+
+/* Page-to-page cross-fade (React <ViewTransition> in each page). */
+:root {
+  --page-fade: 1000ms;
+}
+::view-transition-group(*) {
+  animation-duration: var(--page-fade);
+}
+/* Let clicks through while a transition runs. */
+::view-transition {
+  pointer-events: none;
+}
+@media (prefers-reduced-motion: reduce) {
+  ::view-transition-old(*),
+  ::view-transition-new(*),
+  ::view-transition-group(*) {
+    animation-duration: 0s !important;
+    animation-delay: 0s !important;
+  }
+}
