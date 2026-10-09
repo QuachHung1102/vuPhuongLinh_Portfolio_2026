@@ -1,6 +1,6 @@
 import type { CSSProperties } from "react";
 
-const TEXT = "vu phuong linh • ";
+const TEXT = "vu * phuong linh * ";
 
 export function LoadingScreen({ leaving }: { leaving: boolean }) {
   const letters = Array.from(TEXT);
