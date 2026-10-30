@@ -8,8 +8,8 @@ import { runPool } from "@/lib/preload-queue";
 import { LoadingScreen } from "./LoadingScreen";
 
 const CONCURRENCY = 3;
-const MAX_WAIT_MS = 15_000; // never trap the visitor behind the loading screen
-const LEAVE_MS = 600; // keep in sync with the opacity transition in globals.css
+const MAX_WAIT_MS = 15_000;
+const LEAVE_MS = 600;
 
 /** Resolves when the image loaded or failed; never rejects. */
 function load(ref: ImageRef, priority: "high" | "low"): Promise<void> {
