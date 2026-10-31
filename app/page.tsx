@@ -21,19 +21,19 @@ const fs = (px: number) => `${(px / W) * 100}cqw`; // font-size theo container
 /* ---------- Dữ liệu ---------- */
 const NAV = [
   { label: "About Me", href: "/about", l: 266, w: 218 },
-  { label: "Competitions", href: "/competitions", l: 561, w: 172 },
+  { label: "Competitions", href: "/competition", l: 561, w: 172 },
   { label: "Performing", href: "/performing", l: 810, w: 146 },
-  { label: "Culture and Writing", href: "/culture-and-writing", l: 1033, w: 265 },
-  { label: "Community", href: "/community", l: 1375, w: 149 },
+  { label: "Culture and Writing", href: "/culture-writing", l: 1033, w: 265 },
+  { label: "Community Services", href: "/community-services", l: 1375, w: 269 },
 ];
 
 // Đổi src cho đúng ảnh trong thư mục /public của bạn
 const PHOTOS = [
-  { label: "Culture and Writing", href: "/culture-and-writing", src: "/images/home/culture-writing.jpg", l: 1499, t: 160, w: 421, h: 306 },
+  { label: "Culture and Writing", href: "/culture-writing", src: "/images/home/culture-writing.jpg", l: 1499, t: 160, w: 421, h: 306 },
   { label: "About Me", href: "/about", src: "/images/home/about-me.jpg", l: 238, t: 465, w: 420, h: 305 },
   { label: "Performing", href: "/performing", src: "/images/home/performing.jpg", l: 1078, t: 466, w: 421, h: 304 },
-  { label: "Competitions", href: "/competitions", src: "/images/home/competition.jpg", l: 658, t: 770, w: 420, h: 306 },
-  { label: "Community", href: "/community", src: "/images/home/community.jpg", l: 1499, t: 770, w: 421, h: 306 },
+  { label: "Competitions", href: "/competition", src: "/images/home/competition.jpg", l: 658, t: 770, w: 420, h: 306 },
+  { label: "Community Services", href: "/community-services", src: "/images/home/community.jpg", l: 1499, t: 770, w: 421, h: 306 },
 ];
 
 // Các khối xám trang trí

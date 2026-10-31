@@ -2,7 +2,7 @@ import Image from "next/image";
 import { SLIDE_SIZES } from "@/lib/image-sizes";
 import { MorphSlider } from "./MorphSlider";
 
-const DELAY_MS = 4000; // mỗi ảnh hiện 4s, theo yêu cầu của bạn
+const DELAY_MS = 2000; // mỗi ảnh hiện 4s, theo yêu cầu của bạn
 const FADE_MS = 1000; // chưa có yêu cầu nên mình tự chọn
 
 type Props = { images: string[]; alt: string; focus?: string };
