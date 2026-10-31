@@ -9,9 +9,6 @@ import { Slideshow } from "./Slideshow";
 
 const BUTTON =
   "mt-10 inline-block cursor-pointer border border-white px-10 py-5 text-18 leading-25 transition-colors hover:bg-white hover:text-black";
-
-// Cột trái dùng đơn vị riêng: co theo cả chiều rộng lẫn chiều cao viewport, nên
-// nội dung luôn vừa khung 1920×1080 của design dù màn hình thấp hay rộng.
 const FIT_UNIT = "min(100vw / 1920, 100dvh / 1080)";
 
 export function SectionView({ section }: { section: Section }) {
