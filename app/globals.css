@@ -20,6 +20,9 @@
 
   /* chữ nhỏ nhất giữ mức sàn đủ đọc trên tablet */
   --text-18: max(calc(var(--u) * 18), 12px);
+  /* chữ mô tả và nút trong các mục (to hơn 18 cho dễ đọc) */
+  --text-20: max(calc(var(--u) * 20), 13px);
+  --text-22: max(calc(var(--u) * 22), 14px);
   --text-25: calc(var(--u) * 25);
   --text-30: calc(var(--u) * 30);
   --text-35: calc(var(--u) * 35);

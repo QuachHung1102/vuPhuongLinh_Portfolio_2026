@@ -30,6 +30,7 @@ Cột "Layer trong Figma" là tên layer ảnh nằm bên phải thiết kế, �
 | `performing/4-little-sun` | Little Sun Theater Troupe | 1 | `DSC05107`, `DSC05125`, `DSC05136`, `DSC05168` |
 | `culture-writing/1-gom-show` | GOm Show | 3 | `image 4`, `image 5` (và ảnh trong frame) |
 | `culture-writing/2-cnn-zoom` | CNN ZOOM | 1 | `image 7`: chỉ một ảnh, không chuyển ảnh |
+| `culture-writing/4-midsummer` | Vibrant CNN Showcase – “A Midsummer Night’s Dream” | 0 | ảnh trong Drive 4.4 (thư mục trống thì khung ảnh để trống) |
 | `culture-writing/3-life-so-drama` | Life’s So Drama | 6 | `IMG_7059` … `IMG_7064` |
 | `community-services/1-up-project` | The Up Project | 5 | `486801181_…`, `IMG_0109`, `IMG_6993`, `IMG_7360`, `kéo co` |
 | `community-services/2-scribbles` | Scribbles Season 11 | 6 | `scb 3`, `scb 4`, `scb 5`, `IMG_7806`, `Rectangle 11` |
@@ -37,6 +38,13 @@ Cột "Layer trong Figma" là tên layer ảnh nằm bên phải thiết kế, �
 | `community-services/4-school-prom` | School Prom Event | 5 | trong Figma chỉ có các khung trống `Rectangle 6`–`10`, chưa có ảnh |
 
 Tên layer lấy từ panel Layers của Figma. Các hàng ảnh nằm bên phải frame, ngang hàng với frame tương ứng.
+
+## PDF và nhạc (cũng đọc theo thư mục, không phải sửa code)
+
+| Thư mục / file | Dùng ở | Cách hoạt động |
+| -------------- | ------ | -------------- |
+| `public/zoom/*.pdf` | nút **Read the Issues** của mục CNN ZOOM | Mỗi PDF là một số báo, tiêu đề lấy từ tên file (vd `Issue 21 (2022) - Fiesta.pdf`). Muốn có ảnh bìa thì thêm ảnh cùng tên (`Issue 21 (2022) - Fiesta.jpg`). Chưa có PDF nào thì nút mở thư mục Drive. |
+| `public/audio/a-midsummer-nights-dream.mp3` | nút **Soundtrack** của mục Midsummer | Bấm để phát/dừng. Chưa có file thì nút mở file nhạc trên Drive. |
 
 ## Ảnh cố định (không đọc theo thư mục)
 

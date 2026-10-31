@@ -3,12 +3,15 @@
 import Image from "next/image";
 import Link from "next/link";
 import { Fragment, useState, ViewTransition, type CSSProperties } from "react";
-import type { Section } from "@/lib/content";
+import type { ButtonDef, Item, Section } from "@/lib/content";
 import { u } from "@/lib/design";
+import { IssuesModal } from "./IssuesModal";
 import { Slideshow } from "./Slideshow";
+import { SoundtrackButton } from "./SoundtrackButton";
 
+// Nút/link web in đậm (yêu cầu trong Content_Portfolio.docx).
 const BUTTON =
-  "mt-10 inline-block cursor-pointer border border-white px-10 py-5 text-18 leading-25 transition-colors hover:bg-white hover:text-black";
+  "inline-block cursor-pointer border border-white px-12 py-6 text-20 leading-28 font-bold transition-colors hover:bg-white hover:text-black";
 
 // Cột trái dùng đơn vị riêng: co theo cả chiều rộng lẫn chiều cao viewport, nên
 // nội dung luôn vừa khung 1920×1080 của design dù màn hình thấp hay rộng.
@@ -16,7 +19,31 @@ const FIT_UNIT = "min(100vw / 1920, 100dvh / 1080)";
 
 export function SectionView({ section }: { section: Section }) {
   const [active, setActive] = useState(0);
+  const [issuesOpen, setIssuesOpen] = useState(false);
   const item = section.items[active];
+
+  const renderButton = (it: Item, b: ButtonDef) => {
+    if (b.action === "issues" && it.issues) {
+      return (
+        <button key={b.label} type="button" className={BUTTON} onClick={() => setIssuesOpen(true)}>
+          {b.label}
+        </button>
+      );
+    }
+    if (b.action === "soundtrack" && it.audioSrc) {
+      return <SoundtrackButton key={b.label} src={it.audioSrc} label={b.label} className={BUTTON} />;
+    }
+    // Link thường, hoặc phương án dự phòng (thư mục/file Drive) khi chưa có PDF/nhạc trong public/.
+    return b.href ? (
+      <a key={b.label} href={b.href} target="_blank" rel="noreferrer" className={BUTTON}>
+        {b.label}
+      </a>
+    ) : (
+      <button key={b.label} type="button" className={BUTTON}>
+        {b.label}
+      </button>
+    );
+  };
 
   return (
     <ViewTransition>
@@ -91,7 +118,8 @@ export function SectionView({ section }: { section: Section }) {
               )}
             </nav>
             <div className="flex flex-col gap-10">
-              <h1 className="text-50 leading-[normal] whitespace-nowrap">
+              {/* ĐÃ THÊM font-bold Ở ĐÂY ĐỂ IN ĐẬM TIÊU ĐỀ SECTION */}
+              <h1 className="font-bold text-50 leading-[normal] whitespace-nowrap">
                 {section.title}
               </h1>
               <p className="text-30 leading-30">{section.tagline}</p>
@@ -111,11 +139,12 @@ export function SectionView({ section }: { section: Section }) {
                     <li aria-hidden className="max-h-16 min-h-7 flex-[1_1_0%]" />
                   )}
                   <li className="shrink-0">
+                    {/* ĐÃ THÊM font-bold Ở ĐÂY ĐỂ IN ĐẬM TIÊU ĐỀ ITEM */}
                     <button
                       type="button"
                       aria-expanded={open}
                       onClick={() => setActive(i)}
-                      className={`block w-full cursor-pointer text-left text-25 leading-25 whitespace-pre-line transition-colors duration-300 motion-reduce:transition-none ${
+                      className={`font-bold block w-full cursor-pointer text-left text-25 leading-25 whitespace-pre-line transition-colors duration-300 motion-reduce:transition-none ${
                         open ? "text-white" : "text-white/40 hover:text-white/70"
                       }`}
                     >
@@ -133,28 +162,21 @@ export function SectionView({ section }: { section: Section }) {
                       <div className="min-h-0 overflow-hidden">
                         <div style={{ paddingTop: u(section.descGap) }}>
                           <div
-                            className="text-18 whitespace-pre-line [&>p+p]:mt-[1lh]"
-                            style={{ lineHeight: u(section.descLeading) }}
+                            className="whitespace-pre-line [&>p+p]:mt-[1lh]"
+                            style={{
+                              fontSize: `max(${u(section.descSize)}, 14px)`,
+                              lineHeight: u(section.descLeading),
+                            }}
                           >
                             {it.description?.map((p) => (
                               <p key={p}>{p}</p>
                             ))}
                           </div>
-                          {it.button &&
-                            (it.button.href ? (
-                              <a
-                                href={it.button.href}
-                                target="_blank"
-                                rel="noreferrer"
-                                className={BUTTON}
-                              >
-                                {it.button.label}
-                              </a>
-                            ) : (
-                              <button type="button" className={BUTTON}>
-                                {it.button.label}
-                              </button>
-                            ))}
+                          {it.buttons && it.buttons.length > 0 && (
+                            <div className="mt-12 flex flex-wrap gap-x-14 gap-y-10">
+                              {it.buttons.map((b) => renderButton(it, b))}
+                            </div>
+                          )}
                         </div>
                       </div>
                     </div>
@@ -164,6 +186,9 @@ export function SectionView({ section }: { section: Section }) {
             })}
           </ul>
         </div>
+        {issuesOpen && item.issues && (
+          <IssuesModal issues={item.issues} onClose={() => setIssuesOpen(false)} />
+        )}
       </main>
     </ViewTransition>
   );

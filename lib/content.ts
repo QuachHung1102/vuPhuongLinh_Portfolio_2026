@@ -3,11 +3,25 @@ import path from "node:path";
 
 // Nội dung chữ và đường dẫn ảnh lấy từ các frame Figma ghi trong DESIGN.md.
 
+/**
+ * Nút dưới phần mô tả. Không có `action` thì là link thường (chưa có `href` thì nút chưa bấm được).
+ * - "issues": mở bảng đọc PDF các số báo trong `public/<issuesDir>/`; chưa có PDF thì mở `href` (thư mục Drive).
+ * - "soundtrack": phát/dừng file nhạc `audio` của mục; chưa có file thì mở `href` (file Drive).
+ */
+export type ButtonDef = { label: string; href?: string; action?: "issues" | "soundtrack" };
+
+/** Một số báo (PDF) hiện trong bảng đọc của mục CNN ZOOM. */
+export type Issue = { title: string; pdf: string; cover?: string };
+
 type ItemDef = {
   title: string;
   /** Các đoạn hiện dưới tiêu đề khi mục đang mở. */
   description?: string[];
-  button?: { label: string; href?: string };
+  buttons?: ButtonDef[];
+  /** Đường dẫn trong public/ của file nhạc (nút "soundtrack"). */
+  audio?: string;
+  /** Thư mục trong public/ chứa PDF các số báo (nút "issues"). */
+  issuesDir?: string;
   /** Thư mục trong public/images/ chứa ảnh của mục này (xem docs/adding-images.md). */
   dir: string;
   /** object-position của ảnh đầu tiên, lấy theo vùng crop trong Figma. */
@@ -16,9 +30,13 @@ type ItemDef = {
   inset?: boolean;
 };
 
-export type Item = Omit<ItemDef, "dir"> & {
+export type Item = Omit<ItemDef, "dir" | "audio" | "issuesDir"> & {
   /** Xếp theo tên file: ảnh đầu là ảnh trong frame Figma, tất cả cross-fade với nhau. */
   images: string[];
+  /** Có giá trị khi file nhạc thật sự nằm trong public/. */
+  audioSrc?: string;
+  /** Có giá trị khi thư mục PDF có ít nhất một file. */
+  issues?: Issue[];
 };
 
 type SectionDef = Omit<Section, "items"> & { items: ItemDef[] };
@@ -30,8 +48,9 @@ export type Section = {
   /** Đơn vị design px. */
   titleWidth: number;
   listWidth: number;
-  /** Khoảng cách từ tiêu đề đến mô tả và line-height của mô tả (design px). */
+  /** Khoảng cách từ tiêu đề đến mô tả, cỡ chữ và line-height của mô tả (design px). */
   descGap: number;
+  descSize: number;
   descLeading: number;
   /** Mũi tên ở khối tiêu đề chuyển qua lại giữa 5 trang chính (about → … → community); trang cuối không có "→". */
   prev: string;
@@ -46,10 +65,11 @@ const sections: SectionDef[] = [
     title: "Competition",
     tagline:
       "I’ve always been the kid questioning the whole world, immersing myself in the curiosity to untangle social puzzles.",
-    titleWidth: 304,
-    listWidth: 426.891,
+    titleWidth: 440,
+    listWidth: 450,
     descGap: 25,
-    descLeading: 20,
+    descSize: 21.5,
+    descLeading: 29,
     prev: "/about",
     next: "/performing",
     items: [
@@ -57,6 +77,12 @@ const sections: SectionDef[] = [
         title: "Gold Award - World Invention Creativity Olympic 2026 (WICO 2026)",
         description: [
           "In the competition, we developed a compact device with helpful features aimed at supporting dyspnea patients, tackling the need for detailed information on air quality for specific areas, analysis of patients’ health and air quality, and assistance in locating the closest medical facilities when needed. Our solution promotes pollution awareness and enhances dyspnea patients’ health as well as convenience.",
+        ],
+        buttons: [
+          {
+            label: "WICO Certificate",
+            href: "https://drive.google.com/file/d/1-d8Ozcnl4LcPxmRM0gJd4qUoViDAdg9t/view?usp=drive_link",
+          },
         ],
         dir: "competition/1-wico",
         focus: "18.5% 50%",
@@ -66,10 +92,16 @@ const sections: SectionDef[] = [
         description: [
           "Popular media describe a resurgence of traditional, craft-related hobbies among younger consumers, a trend nicknamed “grannycore,” and claim such pursuits are displacing nightlife and screen time. Our study “The Grannycore Hypothesis” examines whether this cultural narrative leaves a measurable footprint in U.S. consumer spending behavior. Using monthly Federal Reserve Economic Data (FRED) from 2010 to 2026, we apply trend tests, STL decomposition, and cross-correlation to evaluate hobby-related retail sales. We conclude that aggregate population data do not corroborate a relative hobby resurgence or the displacement of nightlife.",
         ],
-        button: {
-          label: "Grannycore Report",
-          href: "https://drive.google.com/file/d/1fFNsiGkq66FAqoRj064f8UiHFkqDAgav/view",
-        },
+        buttons: [
+          {
+            label: "Grannycore Report",
+            href: "https://drive.google.com/file/d/1fFNsiGkq66FAqoRj064f8UiHFkqDAgav/view",
+          },
+          {
+            label: "iCAN Certificate",
+            href: "https://drive.google.com/drive/folders/1fUa2whmlzWUZt430gYiBcCyO7eUbUxTQ?usp=sharing",
+          },
+        ],
         dir: "competition/2-ican",
         inset: true,
       },
@@ -102,9 +134,10 @@ const sections: SectionDef[] = [
     title: "Performing",
     tagline: "My heart has always found its home under the spotlight.",
     titleWidth: 287,
-    listWidth: 349,
+    listWidth: 420,
     descGap: 10,
-    descLeading: 18,
+    descSize: 23,
+    descLeading: 32,
     prev: "/competition",
     next: "/culture-writing",
     items: [
@@ -147,9 +180,10 @@ const sections: SectionDef[] = [
     tagline:
       "Life is always so vividly colorful, and a part of me belongs to these beautiful fragments. Off-stage, I pour my soul into every page.",
     titleWidth: 390,
-    listWidth: 349,
+    listWidth: 420,
     descGap: 10,
-    descLeading: 18,
+    descSize: 23,
+    descLeading: 32,
     prev: "/performing",
     next: "/community-services",
     items: [
@@ -159,7 +193,7 @@ const sections: SectionDef[] = [
           "“When the clay awake and sing,\nAnd the earthen vessels ring.”",
           "GOm Show transforms clay, bamboo, and traditional indigenous instruments into a contemporary performance that brings the sounds, stories, and cultural spirit of local communities vividly to life",
         ],
-        button: { label: "Visit the Website", href: "https://www.facebook.com/GOmShow/" },
+        buttons: [{ label: "Visit the Website", href: "https://www.facebook.com/GOmShow/" }],
         dir: "culture-writing/1-gom-show",
         focus: "100% 50%",
       },
@@ -168,8 +202,34 @@ const sections: SectionDef[] = [
         description: [
           "CNN Zoom is the official publication and the representative voice of the teachers and students at the Foreign Language Specialized School. Every year, thousands of copies are delivered to readers throughout Hanoi.",
         ],
-        button: { label: "Visit CNN ZOOM Website", href: "https://cnnzoom.com/" },
+        buttons: [
+          { label: "Visit CNN ZOOM Website", href: "https://tinyurl.com/translayxudepraocanngonngu" },
+          {
+            label: "Explore",
+            action: "issues",
+            // Chưa có PDF trong public/zoom/ thì nút mở thư mục Drive này.
+            href: "https://drive.google.com/drive/folders/1f4ImXz-Zxja_-K3ZXAYsAyr_T2xrXVco?usp=sharing",
+          },
+        ],
+        issuesDir: "zoom",
         dir: "culture-writing/2-cnn-zoom",
+      },
+      {
+        title: "Vibrant CNN Showcase – “A Midsummer Night’s Dream” by William Shakespeare",
+        description: [
+          "“Love looks not with the eyes, but with the mind–where moonlight fades and shadows take flight.”",
+          "Reimagining Shakespeare’s whimsical Athenian woods, we transformed classic Elizabethan theatre into an immersive journey through shadow play, original choreography, and synchronized voiceovers. We spearheaded end-to-end stage management, breathing life into an enchanted dreamscape where reality and illusion intertwine.",
+        ],
+        buttons: [
+          {
+            label: "Soundtrack: A Midsummer Night’s Dream",
+            action: "soundtrack",
+            // Chưa có file nhạc trong public/audio/ thì nút mở file Drive này.
+            href: "https://drive.google.com/file/d/1tPL4mRDNYtHluHlnUW0_Q_n_hBKJ61b2/view?usp=sharing",
+          },
+        ],
+        audio: "/audio/a-midsummer-nights-dream.mp3",
+        dir: "culture-writing/4-vibrant-cnn",
       },
       {
         title: "Life’s So Drama - On Stage 2024\n(Drama Show)",
@@ -187,9 +247,10 @@ const sections: SectionDef[] = [
     tagline:
       "Legend has it that laughter is the best medicine. Nothing fills my heart quite like seeing others smile.",
     titleWidth: 287,
-    listWidth: 349,
+    listWidth: 420,
     descGap: 10,
-    descLeading: 18,
+    descSize: 23,
+    descLeading: 32,
     prev: "/culture-writing",
     items: [
       {
@@ -208,13 +269,12 @@ const sections: SectionDef[] = [
         dir: "community-services/2-scribbles",
       },
       {
-        // chưa có link nên nút chưa bấm được
         title: "Nha Em Bakery",
         description: [
           "\"Dear you, on a gloomy rainy day,\"",
           "Nha Em—an online bakery combining artisanal desserts with personal storytelling through handwritten letter orders—is a labor of love, established in the summer of 2025. They say our greatest fear is failure, yet it is even more terrifying to look back on those “gloomy days” and regret how many opportunities we missed. At Nha Em, we strive to be a space where everyone can be listened to and empowered to take a step forward.",
         ],
-        button: { label: "Visit Our Website" },
+        buttons: [{ label: "Visit Our Website", href: "http://nhaem.framer.website/" }],
         dir: "community-services/3-nha-em",
       },
       {
@@ -244,11 +304,50 @@ export function listImages(dir: string): string[] {
     .map((f) => `/images/${dir}/${f}`);
 }
 
+const COVER_FILE = IMAGE_FILE;
+
+/** Tên file → tiêu đề hiển thị, vd "Issue 21 (2022) - Fiesta.pdf" → "Issue 21 (2022) - Fiesta". */
+function issueTitle(file: string) {
+  return file.replace(/\.pdf$/i, "").replace(/_/g, " ").trim();
+}
+
+// Đọc lúc render như listImages: thả PDF vào public/<dir>/ là hiện. Ảnh bìa (tùy chọn) là
+// file ảnh cùng tên, vd "Issue 21.pdf" + "Issue 21.jpg".
+export function listIssues(dir: string): Issue[] {
+  const abs = path.join(process.cwd(), "public", dir);
+  if (!fs.existsSync(abs)) return [];
+  const files = fs.readdirSync(abs);
+  const base = (f: string) => f.replace(/\.[^.]+$/, "");
+  return files
+    .filter((f) => /\.pdf$/i.test(f))
+    .sort((a, b) => a.localeCompare(b, undefined, { numeric: true }))
+    .map((f) => {
+      const cover = files.find((c) => COVER_FILE.test(c) && base(c) === base(f));
+      return {
+        title: issueTitle(f),
+        pdf: `/${dir}/${encodeURIComponent(f)}`,
+        cover: cover ? `/${dir}/${encodeURIComponent(cover)}` : undefined,
+      };
+    });
+}
+
+function publicFileExists(src: string) {
+  return fs.existsSync(path.join(process.cwd(), "public", src));
+}
+
 export function getSection(slug: string): Section {
   const s = sections.find((x) => x.slug === slug);
   if (!s) throw new Error(`Unknown section: ${slug}`);
   return {
     ...s,
-    items: s.items.map(({ dir, ...item }) => ({ ...item, images: listImages(dir) })),
+    items: s.items.map(({ dir, audio, issuesDir, ...item }) => {
+      const issues = issuesDir ? listIssues(issuesDir) : [];
+      return {
+        ...item,
+        images: listImages(dir),
+        audioSrc: audio && publicFileExists(audio) ? audio : undefined,
+        issues: issues.length > 0 ? issues : undefined,
+      };
+    }),
   };
 }
